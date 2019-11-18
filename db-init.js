@@ -1,21 +1,21 @@
 import firebase from "firebase/app";
 import "firebase/database";
-import "firebase/auth"
+import "firebase/auth";
 
 // Your web app's Firebase configuration
 var firebaseConfig = {
-    apiKey: "AIzaSyDxzizSFCCRa0JhKdMHDqEuQ9Q-URuog-I",
-    authDomain: "cis-371-faeba.firebaseapp.com",
-    databaseURL: "https://cis-371-faeba.firebaseio.com",
-    projectId: "cis-371-faeba",
-    storageBucket: "cis-371-faeba.appspot.com",
-    messagingSenderId: "648973464692",
-    appId: "1:648973464692:web:0cf6a524106f4349878d21",
-    measurementId: "G-Q6MCV073JC"
-};
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+    apiKey: "AIzaSyCXdMQ-KMhroPmtrnVzfjrKbF66e4nmjOE",
+    authDomain: "inclass-7d71d.firebaseapp.com",
+    databaseURL: "https://inclass-7d71d.firebaseio.com",
+    projectId: "inclass-7d71d",
+    storageBucket: "inclass-7d71d.appspot.com",
+    messagingSenderId: "1025799980913",
+    appId: "1:1025799980913:web:d6dabd8d600b376a9358d0",
+    measurementId: "G-2DEBK9S23P"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
 
 const AppDB = firebase.database();
-const AppAUTH = firebase.auth(); 
-export { AppDB,AppAUTH }; // Make it available to other modules
+const AppAUTH = firebase.auth();
+export { AppDB, AppAUTH }; // Make this name available to other modules
