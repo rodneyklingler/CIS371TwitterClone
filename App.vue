@@ -26,15 +26,7 @@
       </div>
 
       <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
+      <v-btn @click="ButtonHandler">SignOut</v-btn>
     </v-app-bar>
 
     <v-content>
@@ -44,17 +36,28 @@
 </template>
 
 <script>
-import Login from '../src/Login';
-
+import Login from '../src/Login.vue';
+import {AppAUTH} from '../db-init.js';
 export default {
   name: 'App',
-
   components: {
     Login,
   },
-
   data: () => ({
     //
   }),
+  methods: {
+  ButtonHandler() {
+    AppAUTH.signOut().then(() => {
+    //alert("Outta here");
+    this.$router.Login();
+  });
+  }
+  },
+  mounted() {
+    AppAUTH.onAuthStateChanged((u) => {
+        this.isLoggedIn = u !== null;
+    });
+  }
 };
 </script>
