@@ -40,7 +40,7 @@ export default {
   ButtonHandler() {
     AppAUTH.signOut().then(() => {
     //alert("Outta here");
-    this.$router.back();
+    this.$router.push({ path: "/" });
   });
   }
   },
