@@ -3,14 +3,16 @@
     <h2>Profile</h2>
     <div id="tweetForm">
         <v-text-field label="PostName" type="text" v-model="postName" />
-        <v-text-field label="PostBody" type="number" v-model="postBody" />  
+        <v-text-field label="PostBody" type="text" v-model="postBody" />  
         <v-text-field label="UserName" type="text" v-model="userName" />
-        <button color="primary" type="radio" >Public</button>
-        <button color="primary" type="radio" >Private</button>
-        <button color="primary" v-bind:disabled="userSelections.length == 0" @click="deleteButtonHandler">Delete</button>
-        <button color="primary" @click="yourButtonHandler">Add</button>
+        <v-radio-group label="Private or Public" v-model="active">
+            <v-radio name="active" label="Private" :value="0"></v-radio>
+            <v-radio name="active" label="Public" :value="1"></v-radio>                
+        </v-radio-group>
+        <v-btn color="primary" v-bind:disabled="userSelections.length == 0" @click="deleteButtonHandler">Delete</v-btn>
+        <v-btn color="primary" @click="yourButtonHandler">Add</v-btn>
     
-    <!-- <div id="personalTweetTable">
+    <div id="personalTweetTable">
         <table>
             <thead>
             <tr>
@@ -30,7 +32,7 @@
                 </td>
             </tr>
         </tbody>
-        </table> -->
+        </table>
     </div>
     </div>
 </template>
@@ -42,7 +44,7 @@ import { AppDB } from "../db-init.js";
     /* You will fill this in later */
     data() {
     return {
-      picked:[],
+      active:[],
       userSelections: [],
       postName: "",
       postBody: "",
@@ -116,7 +118,7 @@ import { AppDB } from "../db-init.js";
 </script>
 
 <style scoped>
-#expenseform {  
+#tweetForm {  
     display: grid;
     grid-column: 1 / 2 ;
     width: 50%;
