@@ -11,7 +11,7 @@
         </v-radio-group>
         <v-btn color="primary" v-bind:disabled="userSelections.length == 0" @click="deleteButtonHandler">Delete</v-btn>
         <v-btn color="primary" @click="yourButtonHandler">Add</v-btn>
-    
+    </div>
     <div id="personalTweetTable">
         <table>
             <thead>
