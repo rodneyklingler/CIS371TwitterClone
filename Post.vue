@@ -19,15 +19,15 @@
             </thead>
             <tbody>
             <tr id="postrow" v-for="(myPost,pos) in myPost" :key="pos">
-                <td >{{myPost.description}}</td>
-                <td id="postrow">{{myPost.amount}}</td>
+                <td >{{myPost.postName}}</td>
+                <td id="postrow">{{myPost.postBody}}</td>
                 <td>
                     <input 
                     type="checkbox" 
                     v-bind:id="myPost.key"
                     v-on:change="selectionHandler"
                      />
-                    </td>
+                </td>
             </tr>
         </tbody>
         </table> -->
@@ -42,7 +42,7 @@ import { AppDB } from "../db-init.js";
     /* You will fill this in later */
     data() {
     return {
-        picked:[],
+      picked:[],
       userSelections: [],
       postName: "",
       postBody: "",
@@ -65,13 +65,13 @@ import { AppDB } from "../db-init.js";
 
       fbAddHandler(snapshot) {
           const item = snapshot.val();
-          this.myExpense.push({ ...item, key: snapshot.key });
+          this.myPost.push({ ...item, key: snapshot.key });
 
       },
 
        fbRemoveListener(snapshot) {
     /* snapshot.key will hold the key of the item being REMOVED */
-    this.myExpense = this.myExpense.filter(z => z.key != snapshot.key);
+    this.myPost = this.myPost.filter(z => z.key != snapshot.key);
   },
 
 
@@ -89,19 +89,26 @@ import { AppDB } from "../db-init.js";
 
       yourButtonHandler(){
           /*alert(`You enter ${this.expenseAmt}`);*/
-          AppDB.ref("budget")
+          AppDB.ref("private")
           .push()
           .set({
-              description: this.expenseDesc,
-              amount: this.expenseAmt,
-              date: this.expenseDate,
-              category: this.expenseType
+              postname: this.postName,
+              post: this.postBody,
+              user: this.userName
           });
+
+          AppDB.ref("public")
+          .push()
+          .set({
+              postname: this.postName,
+              post: this.postBody,
+              user: this.userName
+          })
       },
 
       deleteButtonHandler(){
           this.userSelections.forEach((victimKey) => {
-        AppDB.ref('budget').child(victimKey).remove();
+        AppDB.ref('TwitterClone').child(victimKey).remove();
         });
       }
   }
