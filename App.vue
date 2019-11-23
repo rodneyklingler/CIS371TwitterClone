@@ -12,7 +12,7 @@
     </v-app-bar>
 
     <v-content>
-      <Login/>
+      <router-view />
     </v-content>
   </v-app>
 </template>
@@ -28,12 +28,10 @@
 </style>
 
 <script>
-import Login from '../src/Login.vue';
-import {AppAUTH} from '../db-init.js';
+import {AppAUTH} from './db-init.js';
 export default {
   name: 'App',
   components: {
-    Login,
   },
   data: () => ({
     //
@@ -42,7 +40,7 @@ export default {
   ButtonHandler() {
     AppAUTH.signOut().then(() => {
     //alert("Outta here");
-    this.$router.Login();
+    this.$router.back();
   });
   }
   },

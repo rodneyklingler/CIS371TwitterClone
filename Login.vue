@@ -32,7 +32,7 @@ methods: {
   doCreateAccount(){
     AppAUTH.createUserWithEmailAndPassword(this.userEmail, this.userPassword)
   .then(() => {
-    // this.$router.push({ path: "/budget" });
+    this.$router.push({ path: "/Post" });
   })
   .catch((err) => {
     alert("Error " + err);
@@ -41,7 +41,7 @@ methods: {
   doLogin(){
   AppAUTH.signInWithEmailAndPassword(this.userEmail, this.userPassword)
   .then(() => {
-    // this.$router.push({ path: "/budget" });
+    this.$router.push({ path: "/Post" });
   })
   .catch((err) => {
     alert("Error " + err);
