@@ -40,8 +40,9 @@ methods: {
   },
   doLogin(){
   AppAUTH.signInWithEmailAndPassword(this.userEmail, this.userPassword)
-  .then(() => {
+  .then((z) => {
     this.$router.push({ path: "/Post" });
+    this.$store.commit("SET_USER", z.user.uid)
   })
   .catch((err) => {
     alert("Error " + err);
