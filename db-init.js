@@ -1,6 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/database";
 import "firebase/auth";
+import store from "./store";
 
 // Your web app's Firebase configuration
 var firebaseConfig = {
@@ -15,6 +16,10 @@ var firebaseConfig = {
   };
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
+
+  firebase.auth().onAuthStateChanged(user => {
+    store.dispatch("fetchUser", user);
+  });
 
 const AppDB = firebase.database();
 const AppAUTH = firebase.auth();
