@@ -2,9 +2,9 @@
   <div>
     <h2>Profile</h2>
     <div id="tweetForm">
-        <v-text-field label="PostName" type="text" v-model="postName" />
-        <v-text-field label="PostBody" type="text" v-model="postBody" />  
-        <v-text-field label="UserName" type="text" v-model="userName" />
+        <v-text-field label="postName" type="text" v-model="postName" />
+        <v-text-field label="post" type="text" v-model="postBody" />  
+        <v-text-field label="user" type="text" v-model="userName" />
         <v-radio-group label="Private or Public" v-model="active">
             <v-radio name="active" label="Private" :value="0"></v-radio>
             <v-radio name="active" label="Public" :value="1"></v-radio>                
@@ -20,13 +20,37 @@
             </tr>
             </thead>
             <tbody>
-            <tr id="postrow" v-for="(myPost,pos) in myPost" :key="pos">
-                <td >{{myPost.postName}}</td>
-                <td id="postrow">{{myPost.postBody}}</td>
+            <tr id="postrow" v-for="(privatemyPost,pos) in myPost" :key="pos">
+                <td >{{privatemyPost.privatepostName}}</td>
+                <td id="postrow">{{privatemyPost.privatepost}}</td>
+                <td >{{privatemyPost.privateuser}}</td>
                 <td>
                     <input 
                     type="checkbox" 
-                    v-bind:id="myPost.key"
+                    v-bind:id="privatemyPost.key"
+                    v-on:change="selectionHandler"
+                     />
+                </td>
+            </tr>
+        </tbody>
+        </table>
+    </div>
+    <div id="publicTweetTable">
+        <table>
+            <thead>
+            <tr>
+                <th>Public Post</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr id="postrow" v-for="(publicmyPost,pos) in myPost" :key="pos">
+                <td >{{publicmyPost.publicpostName}}</td>
+                <td id="postrow">{{publicmyPost.publicpost}}</td>
+                <td >{{publicmyPost.publicuser}}</td>
+                <td>
+                    <input 
+                    type="checkbox" 
+                    v-bind:id="publicmyPost.key"
                     v-on:change="selectionHandler"
                      />
                 </td>
@@ -54,13 +78,17 @@ import { AppDB } from "../db-init.js";
   },
 
   mounted() {
-      AppDB.ref("").on("child_added", this.fbAddHandler);
-      AppDB.ref("").on("child_removed", this.fbRemoveListener)
+      AppDB.ref("private").on("child_added", this.fbAddHandler);
+      AppDB.ref("private").on("child_removed", this.fbRemoveListener);
+      AppDB.ref("public").on("child_added", this.fbAddHandler);
+      AppDB.ref("public").on("child_removed", this.fbRemoveListener);
   },
 
   beforeDestroy() {
-      AppDB.ref("").off("child_added", this.fbAddHandler);
-      AppDB.ref("").off("child_removed", this.deleteButtonHandler);
+      AppDB.ref("private").off("child_added", this.fbAddHandler);
+      AppDB.ref("private").off("child_removed", this.deleteButtonHandler);
+      AppDB.ref("public").off("child_added", this.fbAddHandler);
+      AppDB.ref("public").off("child_removed", this.deleteButtonHandler);
   },
 
   methods: {
@@ -71,7 +99,7 @@ import { AppDB } from "../db-init.js";
 
       },
 
-       fbRemoveListener(snapshot) {
+      fbRemoveListener(snapshot) {
     /* snapshot.key will hold the key of the item being REMOVED */
     this.myPost = this.myPost.filter(z => z.key != snapshot.key);
   },
@@ -91,26 +119,29 @@ import { AppDB } from "../db-init.js";
 
       yourButtonHandler(){
           /*alert(`You enter ${this.expenseAmt}`);*/
+          if (this.active == "0") {
           AppDB.ref("private")
           .push()
           .set({
-              postname: this.postName,
-              post: this.postBody,
-              user: this.userName
+              privatepostname: this.postName,
+              privatepost: this.postBody,
+              privateuser: this.userName
           });
-
+      } else {
           AppDB.ref("public")
           .push()
           .set({
-              postname: this.postName,
-              post: this.postBody,
-              user: this.userName
-          })
+              publicpostname: this.postName,
+              publicpost: this.postBody,
+              publicuser: this.userName
+          });
+      }
       },
 
       deleteButtonHandler(){
           this.userSelections.forEach((victimKey) => {
-        AppDB.ref('TwitterClone').child(victimKey).remove();
+        AppDB.ref('private').child(victimKey).remove();
+        AppDB.ref('public').child(victimKey).remove();
         });
       }
   }
