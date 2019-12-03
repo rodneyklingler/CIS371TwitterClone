@@ -20,7 +20,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr id="postrow" v-for="(privatemyPost,pos) in myPost" :key="pos">
+            <tr id="postrow" v-for="(privatemyPost,pos) in myPrivatePost" :key="pos">
                 <td >{{privatemyPost.privatepostName}}</td>
                 <td id="postrow">{{privatemyPost.privatepost}}</td>
                 <td >{{privatemyPost.privateuser}}</td>
@@ -28,7 +28,7 @@
                     <input 
                     type="checkbox" 
                     v-bind:id="privatemyPost.key"
-                    v-on:change="selectionHandler"
+                    v-on:change="privateSelectionHandler"
                      />
                 </td>
             </tr>
@@ -43,7 +43,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr id="postrow" v-for="(publicmyPost,pos) in myPost" :key="pos">
+            <tr id="postrow" v-for="(publicmyPost,pos) in myPublicPost" :key="pos">
                 <td >{{publicmyPost.publicpostName}}</td>
                 <td id="postrow">{{publicmyPost.publicpost}}</td>
                 <td >{{publicmyPost.publicuser}}</td>
@@ -51,7 +51,7 @@
                     <input 
                     type="checkbox" 
                     v-bind:id="publicmyPost.key"
-                    v-on:change="selectionHandler"
+                    v-on:change="publicSelectionHandler"
                      />
                 </td>
             </tr>
@@ -63,7 +63,6 @@
 
 <script>
 import { AppDB } from "../db-init.js";
-
   export default {
     /* You will fill this in later */
     data() {
@@ -73,42 +72,42 @@ import { AppDB } from "../db-init.js";
       postName: "",
       postBody: "",
       userName: "",
-      myPost: [],
+      myPrivatePost: [],
+      myPublicPost: [],
     };
   },
-
   mounted() {
-      AppDB.ref("private").on("child_added", this.fbAddHandler);
-      AppDB.ref("private").on("child_removed", this.fbRemoveListener);
-      AppDB.ref("public").on("child_added", this.fbAddHandler);
-      AppDB.ref("public").on("child_removed", this.fbRemoveListener);
+      AppDB.ref("private").on("child_added", this.privateAddHandler);
+      AppDB.ref("private").on("child_removed", this.privateRemoveListener);
+      AppDB.ref("public").on("child_added", this.publicAddHandler);
+      AppDB.ref("public").on("child_removed", this.publicRemoveListener);
   },
-
   beforeDestroy() {
-      AppDB.ref("private").off("child_added", this.fbAddHandler);
-      AppDB.ref("private").off("child_removed", this.deleteButtonHandler);
-      AppDB.ref("public").off("child_added", this.fbAddHandler);
-      AppDB.ref("public").off("child_removed", this.deleteButtonHandler);
+      AppDB.ref("private").off("child_added", this.privateAddHandler);
+      AppDB.ref("private").off("child_removed", this.privateDeleteButtonHandler);
+      AppDB.ref("public").off("child_added", this.publicAddHandler);
+      AppDB.ref("public").off("child_removed", this.publicDeleteButtonHandler);
   },
-
   methods: {
-
-      fbAddHandler(snapshot) {
+      privateAddHandler(snapshot) {
           const item = snapshot.val();
-          this.myPost.push({ ...item, key: snapshot.key });
-
+          this.myPrivatePost.push({ ...item, key: snapshot.key });
       },
-
-      fbRemoveListener(snapshot) {
+      publicAddHandler(snapshot) {
+          const item = snapshot.val();
+          this.myPublicPost.push({ ...item, key: snapshot.key });
+      },
+      privateRemoveListener(snapshot) {
     /* snapshot.key will hold the key of the item being REMOVED */
-    this.myPost = this.myPost.filter(z => z.key != snapshot.key);
-  },
-
-
-      selectionHandler (changeEvent) {
+    this.myPrivatePost = this.myPrivatePost.filter(z => z.key != snapshot.key);
+    },
+    publicRemoveListener(snapshot) {
+    /* snapshot.key will hold the key of the item being REMOVED */
+    this.myPublicPost = this.myPublicPost.filter(z => z.key != snapshot.key);
+    },
+      privateSelectionHandler (changeEvent) {
         const whichKey = changeEvent.target.id;
         if (changeEvent.target.checked) {
-
         this.userSelections.push(whichKey);
         } else {
         this.userSelections = this.userSelections.filter(x =>{if (x == whichKey) return true
@@ -116,7 +115,16 @@ import { AppDB } from "../db-init.js";
         });
       }
       },
-
+      publicSelectionHandler (changeEvent) {
+        const whichKey = changeEvent.target.id;
+        if (changeEvent.target.checked) {
+        this.userSelections.push(whichKey);
+        } else {
+        this.userSelections = this.userSelections.filter(x =>{if (x == whichKey) return true
+        else return false;
+        });
+      }
+      },
       yourButtonHandler(){
           /*alert(`You enter ${this.expenseAmt}`);*/
           if (this.active == "0") {
@@ -137,12 +145,16 @@ import { AppDB } from "../db-init.js";
           });
       }
       },
-
       deleteButtonHandler(){
-          this.userSelections.forEach((victimKey) => {
-        AppDB.ref('private').child(victimKey).remove();
-        AppDB.ref('public').child(victimKey).remove();
+          if (this.active == "0") {
+            this.userSelections.forEach((victimKey) => {
+                AppDB.ref('private').child(victimKey).remove();
         });
+          } else {
+            this.userSelections.forEach((victimKey) => {
+                AppDB.ref('public').child(victimKey).remove();
+            });
+          }
       }
   }
   };
@@ -158,23 +170,18 @@ import { AppDB } from "../db-init.js";
     border: 4px solid lightgray;
     padding: 4px;
 }
-
 #datarow:nth-child(even) {
 background: orange;
 }
-
 #datarow:nth-child(odd) {
     background: yellow;
 }
-
 #amountrow {
     text-align: right;
 }
-
 #totalName {
     text-align: right;
 }
-
 th {
 background: brown;
 color: white;
