@@ -75,6 +75,7 @@ import store from "../store";
       userName: "",
       myPrivatePost: [],
       myPublicPost: [],
+      writerID: store.getters.user
     };
   },
   mounted() {
@@ -127,9 +128,11 @@ import store from "../store";
       }
       },
       yourButtonHandler(){
-          alert(`You are logged in as ${store.getters.user}`);
+          //alert(`You are logged in as ${store.getters.user}`);
+          const userID = store.getters.user;
           if (this.active == "0") {
           AppDB.ref("private")
+          .child(userID)
           .push()
           .set({
               privatepostname: this.postName,
@@ -138,6 +141,7 @@ import store from "../store";
           });
       } else {
           AppDB.ref("public")
+          .child(userID)
           .push()
           .set({
               publicpostname: this.postName,
