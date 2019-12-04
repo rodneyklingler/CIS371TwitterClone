@@ -79,16 +79,16 @@ import store from "../store";
     };
   },
   mounted() {
-      AppDB.ref("private").on("child_added", this.privateAddHandler);
-      AppDB.ref("private").on("child_removed", this.privateRemoveListener);
-      AppDB.ref("public").on("child_added", this.publicAddHandler);
-      AppDB.ref("public").on("child_removed", this.publicRemoveListener);
+      AppDB.ref("private").child(store.getters.user).on("child_added", this.privateAddHandler);
+      AppDB.ref("private").child(store.getters.user).on("child_removed", this.privateRemoveListener);
+      AppDB.ref("public").child(store.getters.user).on("child_added", this.publicAddHandler);
+      AppDB.ref("public").child(store.getters.user).on("child_removed", this.publicRemoveListener);
   },
   beforeDestroy() {
-      AppDB.ref("private").off("child_added", this.privateAddHandler);
-      AppDB.ref("private").off("child_removed", this.privateDeleteButtonHandler);
-      AppDB.ref("public").off("child_added", this.publicAddHandler);
-      AppDB.ref("public").off("child_removed", this.publicDeleteButtonHandler);
+      AppDB.ref("private").child(store.getters.user).off("child_added", this.privateAddHandler);
+      AppDB.ref("private").child(store.getters.user).off("child_removed", this.privateDeleteButtonHandler);
+      AppDB.ref("public").child(store.getters.user).off("child_added", this.publicAddHandler);
+      AppDB.ref("public").child(store.getters.user).off("child_removed", this.publicDeleteButtonHandler);
   },
   methods: {
       privateAddHandler(snapshot) {
