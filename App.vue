@@ -8,6 +8,8 @@
       <span>TWITTER CLONE</span>
 
       <v-spacer></v-spacer>
+      <v-btn @click="homeButtonHandler">Home</v-btn>
+      <v-btn @click="profileButtonHandler">Profile</v-btn>
       <v-btn @click="ButtonHandler">SignOut</v-btn>
     </v-app-bar>
 
@@ -41,6 +43,18 @@ export default {
     AppAUTH.signOut().then(() => {
     //alert("Outta here");
     this.$router.push({ path: "/" });
+  });
+  },
+  homeButtonHandler() {
+    AppAUTH.signOut().then(() => {
+    //alert("Outta here");
+    this.$router.push({ path: "/TwitterClone" });
+  });
+  },
+  profileButtonHandler() {
+    AppAUTH.signOut().then(() => {
+    //alert("Outta here");
+    this.$router.push({ path: "/Post" });
   });
   }
   },

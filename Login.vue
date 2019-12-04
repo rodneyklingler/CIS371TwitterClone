@@ -32,7 +32,7 @@ methods: {
   doCreateAccount(){
     AppAUTH.createUserWithEmailAndPassword(this.userEmail, this.userPassword)
   .then(() => {
-    this.$router.push({ path: "/Post" });
+    this.$router.push({ path: "/TwitterClone" });
   })
   .catch((err) => {
     alert("Error " + err);
@@ -41,7 +41,7 @@ methods: {
   doLogin(){
   AppAUTH.signInWithEmailAndPassword(this.userEmail, this.userPassword)
   .then((z) => {
-    this.$router.push({ path: "/Post" });
+    this.$router.push({ path: "/TwitterClone" });
     this.$store.commit("SET_USER", z.user.uid)
   })
   .catch((err) => {

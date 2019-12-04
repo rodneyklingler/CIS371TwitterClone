@@ -75,7 +75,6 @@ import store from "../store";
       userName: "",
       myPrivatePost: [],
       myPublicPost: [],
-      writerID: store.getters.user
     };
   },
   mounted() {
@@ -153,11 +152,11 @@ import store from "../store";
       deleteButtonHandler(){
           if (this.active == "0") {
             this.userSelections.forEach((victimKey) => {
-                AppDB.ref('private').child(victimKey).remove();
+                AppDB.ref('private').child(store.getters.user).child(victimKey).remove();
         });
           } else {
             this.userSelections.forEach((victimKey) => {
-                AppDB.ref('public').child(victimKey).remove();
+                AppDB.ref('public').child(store.getters.user).child(victimKey).remove();
             });
           }
       }
