@@ -10,7 +10,7 @@ export default new Vuex.Store({
   },
   getters: {
     user(state){
-      return state.user
+      return state.user.data;
     }
   },
   mutations: {
@@ -18,7 +18,7 @@ export default new Vuex.Store({
       state.user.loggedIn = value;
     },
     SET_USER(state, data) {
-      state.user.data = data;
+      state.user.data = data.userID;
     }
   },
   actions: {
@@ -26,8 +26,7 @@ export default new Vuex.Store({
       commit("SET_LOGGED_IN", user !== null);
       if (user) {
         commit("SET_USER", {
-          displayName: user.displayName,
-          email: user.email
+          userID: user.uid
         });
       } else {
         commit("SET_USER", null);

@@ -63,6 +63,7 @@
 
 <script>
 import { AppDB } from "../db-init.js";
+import store from "../store";
   export default {
     /* You will fill this in later */
     data() {
@@ -126,7 +127,7 @@ import { AppDB } from "../db-init.js";
       }
       },
       yourButtonHandler(){
-          /*alert(`You enter ${this.expenseAmt}`);*/
+          alert(`You are logged in as ${store.getters.user}`);
           if (this.active == "0") {
           AppDB.ref("private")
           .push()
