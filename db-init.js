@@ -18,8 +18,11 @@ var firebaseConfig = {
   firebase.initializeApp(firebaseConfig);
 
   firebase.auth().onAuthStateChanged(user => {
+    if(user !== null){
     store.dispatch("fetchUser", user);
+    }
   });
+
 
 const AppDB = firebase.database();
 const AppAUTH = firebase.auth();

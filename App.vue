@@ -39,25 +39,23 @@ export default {
     //
   }),
   methods: {
-  ButtonHandler() {
-    AppAUTH.signOut().then(() => {
-    //alert("Outta here");
-    this.$router.push({ path: "/" });
-  });
+    ButtonHandler() {
+      AppAUTH.signOut().then(() => {
+        //alert("Outta here");
+        this.$router.push({ path: "/" });
+      });
+    },
+    homeButtonHandler() {
+      //alert("Outta here");
+      this.$router.push({ path: "/TwitterClone" });
+    },
+
+    profileButtonHandler() {
+      //alert("Outta here");
+      this.$router.push({ path: "/Post" });
+    }
   },
-  homeButtonHandler() {
-    AppAUTH.signOut().then(() => {
-    //alert("Outta here");
-    this.$router.push({ path: "/TwitterClone" });
-  });
-  },
-  profileButtonHandler() {
-    AppAUTH.signOut().then(() => {
-    //alert("Outta here");
-    this.$router.push({ path: "/Post" });
-  });
-  }
-  },
+  
   mounted() {
     AppAUTH.onAuthStateChanged((u) => {
         this.isLoggedIn = u !== null;
