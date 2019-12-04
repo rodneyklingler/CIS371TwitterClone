@@ -21,13 +21,11 @@ data: function() {
     isLoggedIn: false
   }
 },
-
 mounted(){
 AppAUTH.onAuthStateChanged((u) => {
   this.isLoggedIn = u !== null;
 });
 },
-
 methods: {
   doCreateAccount(){
     AppAUTH.createUserWithEmailAndPassword(this.userEmail, this.userPassword)
@@ -42,7 +40,8 @@ methods: {
   AppAUTH.signInWithEmailAndPassword(this.userEmail, this.userPassword)
   .then((z) => {
     this.$router.push({ path: "/TwitterClone" });
-    this.$store.commit("SET_USER", z.user.uid)
+    this.$store.commit("SET_USER", z.user.uid);
+    this.$store.commit("SET_LOGGED_IN", true);
   })
   .catch((err) => {
     alert("Error " + err);

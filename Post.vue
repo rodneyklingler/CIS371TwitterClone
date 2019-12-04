@@ -47,6 +47,13 @@
                 <td >{{publicmyPost.publicpostName}}</td>
                 <td id="postrow">{{publicmyPost.publicpost}}</td>
                 <td >{{publicmyPost.publicuser}}</td>
+                <td>
+                    <input 
+                    type="checkbox" 
+                    v-bind:id="publicmyPost.key"
+                    v-on:change="publicSelectionHandler"
+                     />
+                </td>
             </tr>
         </tbody>
         </table>
@@ -68,7 +75,6 @@ import store from "../store";
       userName: "",
       myPrivatePost: [],
       myPublicPost: [],
-      myPublicHomePost: [],
     };
   },
   mounted() {
@@ -76,16 +82,12 @@ import store from "../store";
       AppDB.ref("private").child(store.getters.user).on("child_removed", this.privateRemoveListener);
       AppDB.ref("public").child(store.getters.user).on("child_added", this.publicAddHandler);
       AppDB.ref("public").child(store.getters.user).on("child_removed", this.publicRemoveListener);
-      AppDB.ref("publicHome").on("child_added", this.publicHomeAddHandler);
-      AppDB.ref("publicHome").on("child_removed", this.publicHomeRemoveListener);
   },
   beforeDestroy() {
       AppDB.ref("private").child(store.getters.user).off("child_added", this.privateAddHandler);
       AppDB.ref("private").child(store.getters.user).off("child_removed", this.privateDeleteButtonHandler);
       AppDB.ref("public").child(store.getters.user).off("child_added", this.publicAddHandler);
       AppDB.ref("public").child(store.getters.user).off("child_removed", this.publicDeleteButtonHandler);
-      AppDB.ref("publicHome").on("child_added", this.publicHomeAddHandler);
-      AppDB.ref("publicHome").on("child_removed", this.publicDeletButtonHandler);
   },
   methods: {
       privateAddHandler(snapshot) {
@@ -135,10 +137,10 @@ import store from "../store";
       },
       yourButtonHandler(){
           //alert(`You are logged in as ${store.getters.user}`);
-          const userID = store.getters.user;
+          //const userID = store.getters.user;
           if (this.active == "0") {
           AppDB.ref("private")
-          .child(userID)
+          .child(store.getters.user)
           .push()
           .set({
               privatepostname: this.postName,
@@ -147,20 +149,13 @@ import store from "../store";
           });
       } else {
           AppDB.ref("public")
-          .child(userID)
+          .child(store.getters.user)
           .push()
           .set({
               publicpostname: this.postName,
               publicpost: this.postBody,
               publicuser: this.userName
           })
-          AppDB.ref("publicHome")
-          .push()
-          .set({
-              publicHomepostname: this.postName,
-              publicHomepost: this.postBody,
-              publicHomeuser: this.userName
-          });
       }
       },
       deleteButtonHandler(){
@@ -171,7 +166,6 @@ import store from "../store";
           } else {
             this.userSelections.forEach((victimKey) => {
                 AppDB.ref('public').child(store.getters.user).child(victimKey).remove();
-                AppDB.ref('publicHome').child(victimKey).remove();
             });
           }
       }

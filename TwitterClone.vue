@@ -26,53 +26,37 @@ import store from "../store";
     /* You will fill this in later */
     data() {
     return {
-      active:[],
       userSelections: [],
       postName: "",
       postBody: "",
       userName: "",
-      myPrivatePost: [],
       myPublicPost: [],
     };
   },
   mounted() {
-      AppDB.ref("private").child(store.getters.user).on("child_added", this.privateAddHandler);
-      AppDB.ref("private").child(store.getters.user).on("child_removed", this.privateRemoveListener);
-      AppDB.ref("public").child(store.getters.user).on("child_added", this.publicAddHandler);
+      AppDB.ref("public").on("value", this.publicAddHandler);
       AppDB.ref("public").child(store.getters.user).on("child_removed", this.publicRemoveListener);
   },
   beforeDestroy() {
-      AppDB.ref("private").child(store.getters.user).off("child_added", this.privateAddHandler);
-      AppDB.ref("private").child(store.getters.user).off("child_removed", this.privateDeleteButtonHandler);
       AppDB.ref("public").child(store.getters.user).off("child_added", this.publicAddHandler);
       AppDB.ref("public").child(store.getters.user).off("child_removed", this.publicDeleteButtonHandler);
   },
   methods: {
-      privateAddHandler(snapshot) {
-          const item = snapshot.val();
-          this.myPrivatePost.push({ ...item, key: snapshot.key });
-      },
       publicAddHandler(snapshot) {
-          const item = snapshot.val();
-          this.myPublicPost.push({ ...item, key: snapshot.key });
-      },
-      privateRemoveListener(snapshot) {
-    /* snapshot.key will hold the key of the item being REMOVED */
-    this.myPrivatePost = this.myPrivatePost.filter(z => z.key != snapshot.key);
-    },
+            const item = snapshot.val();
+            for(let home in item){
+                    for(let something in item[home]){
+                        const postPublic = item[home][something];
+                        this.myPublicPost.push({ ...postPublic, key: something});
+                    }
+            }
+            
+        },
+      
     publicRemoveListener(snapshot) {
     /* snapshot.key will hold the key of the item being REMOVED */
     this.myPublicPost = this.myPublicPost.filter(z => z.key != snapshot.key);
     },
-      privateSelectionHandler (changeEvent) {
-        const whichKey = changeEvent.target.id;
-        if (changeEvent.target.checked) {
-        this.userSelections.push(whichKey);
-        } else {
-        this.userSelections = this.userSelections.filter(x =>{if (x == whichKey) return true
-        else return false;
-        });
-      }
       },
       publicSelectionHandler (changeEvent) {
         const whichKey = changeEvent.target.id;
@@ -84,42 +68,15 @@ import store from "../store";
         });
       }
       },
-      yourButtonHandler(){
-          //alert(`You are logged in as ${store.getters.user}`);
-          const userID = store.getters.user;
-          if (this.active == "0") {
-          AppDB.ref("private")
-          .child(userID)
-          .push()
-          .set({
-              privatepostname: this.postName,
-              privatepost: this.postBody,
-              privateuser: this.userName
-          });
-      } else {
-          AppDB.ref("public")
-          .child(userID)
-          .push()
-          .set({
-              publicpostname: this.postName,
-              publicpost: this.postBody,
-              publicuser: this.userName
-          });
-      }
-      },
+      
       deleteButtonHandler(){
-          if (this.active == "0") {
-            this.userSelections.forEach((victimKey) => {
-                AppDB.ref('private').child(store.getters.user).child(victimKey).remove();
-        });
-          } else {
             this.userSelections.forEach((victimKey) => {
                 AppDB.ref('public').child(store.getters.user).child(victimKey).remove();
             });
-          }
-      }
-  }
-  };
+          
+        }
+    };
+  
 </script>
 
 <style scoped>

@@ -8,8 +8,8 @@
       <span>TWITTER CLONE</span>
 
       <v-spacer></v-spacer>
-      <v-btn @click="homeButtonHandler">Home</v-btn>
-      <v-btn @click="profileButtonHandler">Profile</v-btn>
+      <v-btn v-bind:disabled="isLoggedIn == false" @click="homeButtonHandler">Home</v-btn>
+      <v-btn v-bind:disabled="isLoggedIn == false" @click="profileButtonHandler">Profile</v-btn>
       <v-btn @click="ButtonHandler">SignOut</v-btn>
     </v-app-bar>
 
@@ -31,12 +31,14 @@
 
 <script>
 import {AppAUTH} from './db-init.js';
+//import store from "./store";
+//import store from "./store";
 export default {
   name: 'App',
   components: {
   },
   data: () => ({
-    //
+     isLoggedIn: false,
   }),
   methods: {
     ButtonHandler() {
@@ -53,7 +55,7 @@ export default {
     profileButtonHandler() {
       //alert("Outta here");
       this.$router.push({ path: "/Post" });
-    }
+    },
   },
   
   mounted() {
